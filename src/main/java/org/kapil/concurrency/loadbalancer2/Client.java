@@ -35,9 +35,6 @@ public class Client {
     client.printNextTurn("Weighted-Round-Robin");
     LoadBalancer weightedRoundRobin = new WeightedRoundRobinLoadBalancer(ipPoolWeighted);
     client.simulateConcurrentClientRequest(weightedRoundRobin, NUM_OF_REQUESTS);
-
-    System.out.println("MoneyTransferService exits");
-
   }
 
   private void simulateConcurrentClientRequest(LoadBalancer loadBalancer, int numOfCalls) {

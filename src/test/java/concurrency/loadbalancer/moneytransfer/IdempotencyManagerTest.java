@@ -2,7 +2,7 @@ package concurrency.loadbalancer.moneytransfer;
 
 import org.junit.jupiter.api.Test;
 import java.util.concurrent.TimeUnit;
-import org.kapil.concurrency.moneytransfer.IdempotencyManager;
+import org.kapil.concurrency.moneytransfer.infrastructure.IdempotencyManager;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;

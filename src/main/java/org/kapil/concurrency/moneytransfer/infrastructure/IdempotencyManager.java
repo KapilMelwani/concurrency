@@ -1,4 +1,4 @@
-package org.kapil.concurrency.moneytransfer;
+package org.kapil.concurrency.moneytransfer.infrastructure;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
