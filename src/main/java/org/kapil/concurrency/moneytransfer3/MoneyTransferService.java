@@ -1,4 +1,4 @@
-package moneytransfer3;
+package org.kapil.concurrency.moneytransfer3;
 
 import java.math.BigDecimal;
 import java.util.concurrent.CompletableFuture;

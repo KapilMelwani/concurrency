@@ -1,4 +1,4 @@
-package moneytransfer2;
+package org.kapil.concurrency.moneytransfer2;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

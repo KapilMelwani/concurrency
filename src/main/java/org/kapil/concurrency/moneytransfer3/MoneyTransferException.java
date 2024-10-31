@@ -1,4 +1,4 @@
-package moneytransfer3;
+package org.kapil.concurrency.moneytransfer3;
 
 public class MoneyTransferException extends RuntimeException {
     private final int httpCode;
