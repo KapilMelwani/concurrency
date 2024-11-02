@@ -48,8 +48,8 @@ class MoneyTransferServiceTest {
         executor.shutdown();
         executor.awaitTermination(1, TimeUnit.MINUTES);
 
-        assertEquals(new BigDecimal("0.00"), accountA.getBalance().getAmount());
-        assertEquals(new BigDecimal("2000.00"), accountB.getBalance().getAmount());
+        assertEquals(new BigDecimal("0.00"), accountA.getBalance().getReference().getAmount());
+        assertEquals(new BigDecimal("2000.00"), accountB.getBalance().getReference().getAmount());
     }
 
     @Test
@@ -65,10 +65,10 @@ class MoneyTransferServiceTest {
         }
 
         executor.shutdown();
-        executor.awaitTermination(10, TimeUnit.MILLISECONDS);
+        executor.awaitTermination(1, TimeUnit.MINUTES);
 
-        assertEquals(new BigDecimal("0.00"), accountA.getBalance().getAmount());
-        assertEquals(new BigDecimal("2000.00"), accountB.getBalance().getAmount());
+        assertEquals(new BigDecimal("0.00"), accountA.getBalance().getReference().getAmount());
+        assertEquals(new BigDecimal("2000.00"), accountB.getBalance().getReference().getAmount());
     }
 
     @Test
@@ -91,8 +91,8 @@ class MoneyTransferServiceTest {
         BigDecimal expectedBalanceA = new BigDecimal("1000.00");
         BigDecimal expectedBalanceB = new BigDecimal("1000.00");
 
-        assertEquals(expectedBalanceA, accountA.getBalance().getAmount());
-        assertEquals(expectedBalanceB, accountB.getBalance().getAmount());
+        assertEquals(expectedBalanceA, accountA.getBalance().getReference().getAmount());
+        assertEquals(expectedBalanceB, accountB.getBalance().getReference().getAmount());
     }
 
     @Test
@@ -100,8 +100,8 @@ class MoneyTransferServiceTest {
         String requestId = "insufficient-funds-request";
         transferService.transfer(requestId, accountA, accountB, new Money(new BigDecimal("1001.00"), Currency.DOLLAR));
 
-        assertEquals(new BigDecimal("1000.00"), accountA.getBalance().getAmount());
-        assertEquals(new BigDecimal("1000.00"), accountB.getBalance().getAmount());
+        assertEquals(new BigDecimal("1000.00"), accountA.getBalance().getReference().getAmount());
+        assertEquals(new BigDecimal("1000.00"), accountB.getBalance().getReference().getAmount());
     }
 
     @Test
@@ -110,7 +110,7 @@ class MoneyTransferServiceTest {
         transferService.transfer(requestId, accountA, accountB, new Money(new BigDecimal("100.00"), Currency.DOLLAR));
         transferService.transfer(requestId, accountA, accountB, new Money(new BigDecimal("100.00"), Currency.DOLLAR));
 
-        assertEquals(new BigDecimal("900.00"), accountA.getBalance().getAmount());
-        assertEquals(new BigDecimal("1100.00"), accountB.getBalance().getAmount());
+        assertEquals(new BigDecimal("900.00"), accountA.getBalance().getReference().getAmount());
+        assertEquals(new BigDecimal("1100.00"), accountB.getBalance().getReference().getAmount());
     }
 }

@@ -34,7 +34,6 @@ public class RandomLoadBalancer implements LoadBalancer {
         }
 
         if(!instanceAvailable.await(100, TimeUnit.MILLISECONDS)) {
-          //System.out.println("Timeout reached");
           return Optional.empty();
         }
       }

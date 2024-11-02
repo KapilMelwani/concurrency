@@ -1,6 +1,6 @@
 package org.kapil.concurrency.moneytransfer.domain.model.account;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicStampedReference;
 import lombok.Getter;
 import org.kapil.concurrency.moneytransfer.domain.exception.InsufficientFundsException;
 
@@ -8,32 +8,35 @@ public class BankAccount {
   @Getter
   private final String accountId;
   @Getter
-  private Money balance;
-  private final AtomicInteger version;
+  private final AtomicStampedReference<Money> balance;
+
 
   public BankAccount(String id, Money balance) {
     this.accountId = id;
-    this.balance = balance;
-    this.version = new AtomicInteger(0);
+    this.balance = new AtomicStampedReference<>(balance, 0);
   }
 
   public Money withdraw(Money money) {
     if (!validation(money)) {
-      throw new IllegalArgumentException("Cannot deposit using different currency");
+      throw new IllegalArgumentException("Cannot withdraw using different currency");
     }
 
     Money currentBalance;
-    int currentVersion;
-    do {
-      currentVersion = version.get();
-      currentBalance = balance;
-      if (currentBalance.compareTo(money) < 0) {
-        throw new InsufficientFundsException("Not funds.");
-      }
-      this.balance = currentBalance.subtract(money);
-    } while (!version.compareAndSet(currentVersion, currentVersion + 1));
+    int currentStamp;
 
-    return this.balance;
+    do {
+      currentBalance = balance.getReference();
+      currentStamp = balance.getStamp();
+
+      if (currentBalance.compareTo(money) < 0) {
+        throw new InsufficientFundsException("Not enough funds.");
+      }
+
+      Money newBalance = currentBalance.subtract(money);
+      if (balance.compareAndSet(currentBalance, newBalance, currentStamp, currentStamp + 1)) {
+        return balance.getReference();
+      }
+    } while (true);
   }
 
   public Money deposit(Money amount) {
@@ -42,16 +45,20 @@ public class BankAccount {
     }
 
     Money currentBalance;
-    int currentVersion;
+    int currentStamp;
     do {
-      currentVersion = version.get();
-      currentBalance = balance;
-      this.balance = currentBalance.add(amount);
-    } while (!version.compareAndSet(currentVersion, currentVersion + 1));
-    return this.balance;
+      currentBalance = balance.getReference();
+      currentStamp = balance.getStamp();
+
+      Money newBalance = currentBalance.add(amount);
+      if (balance.compareAndSet(currentBalance, newBalance, currentStamp, currentStamp + 1)) {
+        return balance.getReference();
+      }
+    } while (true);
   }
 
+
   private boolean validation(Money money) {
-    return balance.getCurrency().equals(money.getCurrency());
+    return balance.getReference().getCurrency().equals(money.getCurrency());
   }
 }

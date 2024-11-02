@@ -18,6 +18,7 @@ public class RetryManager {
         operation.run();
         return;
       } catch (Exception e) {
+        System.out.println("Retrying operation after exception: " + e.getMessage());
         attempts++;
         if (attempts >= maxAttempts) {
           throw e;
